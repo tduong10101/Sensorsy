@@ -1,9 +1,10 @@
-import Adafruit_DHT
+import adafruit_dht
 import logging
 import logging.handlers as handlers
+from board import *
+pin = D4
+sensor = adafruit_dht.DHT22(pin, use_pulseio=False)
 
-sensor = Adafruit_DHT.DHT22
-pin = 4
 
 MSG_SND = '{{"temperature": {temperature},"humidity": {humidity}}}'
 
@@ -18,7 +19,8 @@ logHandler.setFormatter(formatter)
 logger.addHandler(logHandler)
 
 try:
-    humidity, temperature = Adafruit_DHT.read_retry(sensor, pin)
+    humidity = sensor.humidity
+    temperature = sensor.temperature
     msg_txt_formatted = MSG_SND.format(temperature=round(temperature,2), humidity=round(humidity,2))
     logger.info(msg_txt_formatted)
 except Exception as e:
