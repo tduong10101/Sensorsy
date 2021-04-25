@@ -19,8 +19,15 @@ logHandler.setFormatter(formatter)
 logger.addHandler(logHandler)
 
 try:
-    humidity = sensor.humidity
-    temperature = sensor.temperature
+    humidity=temperature=None
+    while None in (humidity, temperature):
+        try:
+            humidity = sensor.humidity
+            temperature = sensor.temperature
+        except RuntimeError:
+            humidity=temperature=None
+            continue
+    
     msg_txt_formatted = MSG_SND.format(temperature=round(temperature,2), humidity=round(humidity,2))
     logger.info(msg_txt_formatted)
 except Exception as e:
